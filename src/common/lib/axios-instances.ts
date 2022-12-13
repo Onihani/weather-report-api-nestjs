@@ -1,9 +1,15 @@
 import axios from 'axios';
 
-export const openWeatherMapsAxios = axios.create({
-  baseURL: 'https://api.flutterwave.com/v3',
+export const weatherApiAxios = axios.create({
+  baseURL: 'https://api.openweathermap.org/data/2.5',
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${process.env.FLUTTERWAVE_SECRET_KEY}`,
+  },
+});
+
+export const geocodingApiAxios = axios.create({
+  baseURL: 'http://api.openweathermap.org/geo/1.0',
+  headers: {
+    'Content-Type': 'application/json',
   },
 });

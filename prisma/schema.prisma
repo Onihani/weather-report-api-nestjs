@@ -11,8 +11,9 @@ datasource db {
 }
 
 model Incidents {
-  client_id      Int      @id @default(autoincrement())
-  incident_desc  String   @unique
+  id             String      @id @default(uuid())
+  client_id      Int
+  incident_desc  String
   city           String
   country        String
   weather_report Json
