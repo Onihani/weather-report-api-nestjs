@@ -1,3 +1,6 @@
+//core
+import { resolve } from 'path';
+import { writeFileSync } from 'fs';
 // nest
 import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import { ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
@@ -67,5 +70,18 @@ async function bootstrap() {
   // get app url
   const serverUrl = await app.getUrl();
   console.log(`Application is running on: ${serverUrl}`);
+
+  if (process.env.NODE_ENV === 'development') {
+    const pathToSwaggerStaticFolder = resolve(process.cwd(), 'swagger-static');
+
+    // write swagger json file
+    const pathToSwaggerJson = resolve(
+      pathToSwaggerStaticFolder,
+      'swagger.json',
+    );
+    const swaggerJson = JSON.stringify(document, null, 2);
+    writeFileSync(pathToSwaggerJson, swaggerJson);
+    console.log(`Swagger JSON file written to: '/swagger-static/swagger.json'`);
+  }
 }
 bootstrap();
