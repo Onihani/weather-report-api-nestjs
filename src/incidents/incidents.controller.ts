@@ -1,12 +1,5 @@
 // nest
-import { Controller, Post } from '@nestjs/common';
-import { Body } from '@nestjs/common/decorators';
-
-// services
-import { IncidentsService } from './incidents.service';
-
-// inputs
-import { AddIncidentInput } from './dto/inputs/add-incident.input';
+import { Controller, Post, Body, Get, Query } from '@nestjs/common';
 import {
   ApiBody,
   ApiOkResponse,
@@ -15,6 +8,15 @@ import {
   ApiInternalServerErrorResponse,
   ApiTags,
 } from '@nestjs/swagger';
+
+// services
+import { IncidentsService } from './incidents.service';
+
+// inputs
+import { AddIncidentInput } from './dto/inputs/add-incident.input';
+
+// queries
+import { GetIncidentsQuery } from './dto/query/get-incidents.query';
 
 @ApiTags('Incidents')
 @Controller('incidents')
@@ -38,5 +40,23 @@ export class IncidentsController {
   @Post()
   async addIncident(@Body() body: AddIncidentInput) {
     return this.incidentsService.addIncident(body);
+  }
+
+  @ApiOperation({
+    summary: 'Get all reported incidents',
+    description: `Via this endpoint a client can get all reported incidents in a paginated format`,
+  })
+  @ApiOkResponse({
+    description: 'Operation Sucessful',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error',
+  })
+  @Get()
+  async getIncidents(@Query() query: GetIncidentsQuery) {
+    return this.incidentsService.getIncidents(query);
   }
 }

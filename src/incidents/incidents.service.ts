@@ -8,6 +8,9 @@ import { PrismaService } from '../prisma/prisma.service';
 // inputs
 import { AddIncidentInput } from './dto/inputs/add-incident.input';
 
+// queries
+import { GetIncidentsQuery } from './dto/query/get-incidents.query';
+
 // axios instances
 import {
   weatherApiAxios,
@@ -51,6 +54,24 @@ export class IncidentsService {
       };
     } catch (error) {
       console.log('addIncident error: ', error);
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  async getIncidents(paginationQuery: GetIncidentsQuery) {
+    try {
+      const incidents = await this.prisma.incidents.findMany({
+        take: paginationQuery.take || 10,
+        skip: paginationQuery.skip || 0,
+      });
+
+      return {
+        status: 'success',
+        message: 'Incidents fetched successfully',
+        data: incidents,
+      };
+    } catch (error) {
+      console.log('getIncidents error: ', error);
       throw new InternalServerErrorException(error.message);
     }
   }
