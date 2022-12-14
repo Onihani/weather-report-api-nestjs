@@ -15,7 +15,7 @@ git clone https://github.com/Onihani/weather-report-api-nestjs.git
 Navigate into the project's directory and install npm dependencies:
 
 ```
-cd weather-report-api-nest
+cd weather-report-api-nestjs
 npm install
 ```
 
