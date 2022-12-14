@@ -1,73 +1,67 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# WEATHER REPORT API (WITH NEST)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project implements a **REST API with TypeScript** using [NESTJS](https://nestjs.com) and [Prisma Client](https://www.prisma.io/docs/concepts/components/prisma-client). The project uses a Postgres database initial data for seeding a new database which you can find at [`./prisma/seed.ts`](./prisma/seed.ts).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Getting started
 
-## Description
+### 1. Clone or Download project and install dependencies
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Download this example:
 
-## Installation
-
-```bash
-$ npm install
+```
+git clone https://github.com/Onihani/weather-report-api-express.git
 ```
 
-## Running the app
+Navigate into the project's directory and install npm dependencies:
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```
+cd weather-report-api-nest
+npm install
 ```
 
-## Test
+### 2. Adding Environment Variables
+Create a `.env` file in the project's roots directory
+In the ```.env``` file add your `DATABASE_URL` and `OPEN_WEATHER_MAPS_API_KEY` variables
+An example of how the env `.env` file should look like can be found in the [`.env.example`](./.env.example) file in the projects root
 
-```bash
-# unit tests
-$ npm run test
+### 3. Create/Initialize the Database with Tables/Models
 
-# e2e tests
-$ npm run test:e2e
+Run the following command to initialize your database. This also creates the `Incidents` table/model that are defined in [`prisma/schema.prisma`](./prisma/schema.prisma):
 
-# test coverage
-$ npm run test:cov
+```
+npx prisma migrate dev --name init
 ```
 
-## Support
+When `npx prisma migrate dev` is executed against a newly created database, seeding is also triggered. The seed file in [`prisma/seed.ts`](./prisma/seed.ts) will be executed and your database will be populated with the sample data.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
+### 4. Start the REST API server
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```
+npm run start:dev
+```
 
-## License
+The server is now running on `http://localhost:3000`. You can now run the API requests, e.g. [`http://localhost:3000/incidents`](http://localhost:3000/incidents).
 
-Nest is [MIT licensed](LICENSE).
+### 5. API Documentation (Open API/Swagger Docs)
+Visit [`http://localhost:3000/swagger`](http://localhost:3000/swagger) to interact with applications endpoints via the swagger ui.
+
+## Using the REST API
+
+You can access the REST API of the server using the following endpoints:
+
+### `GET`
+
+- `/`: Returns string `Hello World` to indicate the app running or working fine
+- `/incidents?take={take}&skip={skip}`: Fetch all _reported incidents_ from the `incidents` table
+  - Query Parameters (for pagination)
+    - `take` (optional): This specifies how many objects should be returned in the list. (returns 10 items by default)
+    - `skip` (optional): This specifies how many of the returned objects in the list should be skipped (skips 0 items by defualt)
+### `POST`
+
+- `/incident`: Add a new incident to the `incidents` table
+  - Body:
+    - `client_id: Number` (required): The id of the client reporting the incident
+    - `incident_desc: String` (required): The description of the incident
+    - `city: String` (required): The city where the incident occured. **Eg**: Accra
+    - `country: String` (required): The ISO31661Alpha2 code of the country where the incident occured. **Eg**: GH for Ghana
