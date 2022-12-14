@@ -9,7 +9,7 @@ This project implements a **REST API with TypeScript** using [NESTJS](https://ne
 Download this example:
 
 ```
-git clone https://github.com/Onihani/weather-report-api-express.git
+git clone https://github.com/Onihani/weather-report-api-nestjs.git
 ```
 
 Navigate into the project's directory and install npm dependencies:
